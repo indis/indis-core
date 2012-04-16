@@ -36,20 +36,20 @@ module Indis
     
     # Base class for any binary format.
     class Format
-      # Basic constructor takes care of storing the target and io stream
+      # Basic constructor takes care of storing the target and io stream.
       def initialize(target, io)
         @target = target
         @io = io
       end
       
-      # The magic bytes. Must be overriden
+      # Returns the format magic bytes. Must be overriden.
       #
       # @return [Fixnum] Magic bytes that are checked against the first bytes in binary.
       def self.magic
         raise RuntimeError
       end
       
-      # Human-readable format name. Must be overriden
+      # Returns the human-readable format name. Must be overriden.
       #
       # @return [String] Human-readable format name.
       def self.name
