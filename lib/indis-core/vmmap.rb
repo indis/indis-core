@@ -17,16 +17,20 @@
 ##############################################################################
 
 module Indis
+  
+  # VMMap provides access to target's virtaul memory address space
   class VMMap
     def initialize(target)
       @target = target
       @blocks = {}
     end
     
+    # @return [Indis::Segment] a segment at given address or nil
     def segment_at(ofs)
       @target.segments.each.find { |s| (s.vmaddr...s.vmaddr+s.vmsize).include? ofs }
     end
     
+    # @return [Indis::Section] a section at given address or nil
     def section_at(ofs)
       seg = segment_at(ofs)
       return nil unless seg
@@ -34,10 +38,12 @@ module Indis
       seg.sections.each.find { |s| (s.vmaddr...s.vmaddr+s.vmsize).include? ofs }
     end
     
+    # @return True if the address belongs to some segment
     def address_valid?(ofs)
       segment_at(ofs) != nil
     end
     
+    # @return [Fixnum] a byte value at given virtual address
     def byte_at(ofs)
       seg = segment_at(ofs)
       return nil unless seg
@@ -48,6 +54,7 @@ module Indis
       s.bytes[ofs-s.vmaddr].ord
     end
     
+    # @return [Array] a list of bytes at given virtual address span
     def bytes_at(ofs, size)
       seg = segment_at(ofs)
       return nil unless seg
@@ -60,20 +67,26 @@ module Indis
       s.bytes[st...ed].unpack('C*')
     end
     
-    def block_at(ofs)
+    # @return [Indis::Entity] an entity mapped to given address
+    def entity_at(ofs)
       @blocks[ofs]
     end
     
+    # @return True if the given range contains no entities
     def has_unmapped(ofs, size)
-      size.times { |o| return false if block_at(ofs+o) }
+      size.times { |o| return false if entity_at(ofs+o) }
       true
     end
     
+    # Maps an {Indis::Entity entity} (based on its offset).
+    # @raise [ArgumentError] if the range is occupied by another entity
     def map(e)
       raise ArgumentError unless has_unmapped(e.vmaddr, e.size)
       @blocks[e.vmaddr] = e
     end
     
+    # Forcefully maps an {Indis::Entity entity} (based on its offset) unmapping
+    # any other entities in the same address range
     def map!(e)
       (e.vmaddr...(e.vmaddr+e.size)).each do |ofs|
         b = @blocks[ofs]
@@ -85,8 +98,22 @@ module Indis
       map(e)
     end
     
+    # @overload [](ofs)
+    #   Returns an entity at given address, same as {VMMap#entity_at}
+    #   @todo should also return one-byte
+    #   @param [Fixnum] range offset for entity
+    #   @return [Indis::Entity] an entity mapped to given address
+    # @overload [](range)
+    #   Returns a list of entities and bytes at given range. The resulting Array
+    #   contains all bytes in range. For each {Indis::Entity entity} it is mapped
+    #   "as-is" and the following bytes up to {Indis::Entity#size} are filled with
+    #   nil's. For each unmapped byte it is returned as a Fixnum
+    #
+    #   @param [Range] range range
+    #   @return [Array] mapped entities
+    #   @raise [ArgumentError] if there is no segment at given range or the range spans several segments
     def [](range)
-      return block_at(range) if range.is_a?(Fixnum)
+      return entity_at(range) if range.is_a?(Fixnum)
       
       raise ArgumentError unless range.is_a?(Range)
       seg = segment_at(range.begin)
@@ -110,4 +137,5 @@ module Indis
       a
     end
   end
+  
 end
