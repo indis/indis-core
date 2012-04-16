@@ -42,14 +42,14 @@ module Indis
         @io = io
       end
       
-      # Returns the format magic bytes. Must be overriden.
+      # @abstract Returns the format magic bytes.
       #
       # @return [Fixnum] Magic bytes that are checked against the first bytes in binary.
       def self.magic
         raise RuntimeError
       end
       
-      # Returns the human-readable format name. Must be overriden.
+      # @abstract Returns the human-readable format name.
       #
       # @return [String] Human-readable format name.
       def self.name
