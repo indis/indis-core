@@ -18,10 +18,36 @@
 
 module Indis
   
+  # A segment describes one given segment contained in the target binary.
+  # Segment's virtual size might be different from physical (stored in file),
+  # in this case the data is padded with zeroes
+  #
+  # @note this class is heavily based on Mach-O
   class Segment
-    attr_reader :target, :name, :sections
-    attr_reader :vmaddr, :vmsize, :bytes, :iooff
+    # Contains a list of current segment sections
+    # @return [Array]
+    attr_reader :sections
     
+    attr_reader :target   # @return [Indis::Target] owning target
+    
+    attr_reader :name     # @return [String] segment name
+    
+    attr_reader :vmaddr   # @return [Fixnum] starting virtual address
+    
+    attr_reader :vmsize   # @return [Fixnum] segment size
+    
+    # The whole (zero-padded if required) bytes string for a segment
+    # @return [String]
+    attr_reader :bytes
+    
+    attr_reader :iooff    # @return [Fixnum] offset from the beginning of of file to segment data
+    
+    # @param [Indis::Target] target the target containing a segment
+    # @param [String] name segment name
+    # @param [Fixnum] vmaddr starting virtual address
+    # @param [Fixnum] vmsize size (in bytes)
+    # @param [Fixnum] iooff offset from the beginning of of file to segment data
+    # @param [String] bytes known data bytes (loaded from binary)
     def initialize(target, name, vmaddr, vmsize, iooff, bytes)
       @target = target
       @name = name
@@ -33,6 +59,9 @@ module Indis
       @bytes = pad_bytes(bytes)
     end
     
+    # Constructs a Range of virtual addresses used by segment
+    #
+    # @return [Range] the range of all addresses
     def to_vmrange
       @vmaddr..(@vmaddr+@vmsize)
     end
