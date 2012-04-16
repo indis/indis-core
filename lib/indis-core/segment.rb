@@ -25,7 +25,7 @@ module Indis
   # @note this class is heavily based on Mach-O
   class Segment
     # Contains a list of current segment sections
-    # @return [Array]
+    # @return [Array<Indis::Section>]
     attr_reader :sections
     
     attr_reader :target   # @return [Indis::Target] owning target

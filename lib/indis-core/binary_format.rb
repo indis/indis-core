@@ -24,7 +24,7 @@ module Indis
     
     # Returns a list of all known binary formats.
     #
-    # @return [Array] all known binary formats.
+    # @return [Array<Class>] all known binary formats.
     def self.known_formats
       fmt = []
       self.constants.each do |c|

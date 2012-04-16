@@ -54,7 +54,7 @@ module Indis
       s.bytes[ofs-s.vmaddr].ord
     end
     
-    # @return [Array] a list of bytes at given virtual address span
+    # @return [Array<Fixnum>] a list of bytes at given virtual address span
     def bytes_at(ofs, size)
       seg = segment_at(ofs)
       return nil unless seg
@@ -110,7 +110,7 @@ module Indis
     #   nil's. For each unmapped byte it is returned as a Fixnum
     #
     #   @param [Range] range range
-    #   @return [Array] mapped entities
+    #   @return [Array<Indis::Entity,nil,Fixnum>] mapped entities
     #   @raise [ArgumentError] if there is no segment at given range or the range spans several segments
     def [](range)
       return entity_at(range) if range.is_a?(Fixnum)

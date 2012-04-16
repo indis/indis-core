@@ -30,9 +30,9 @@ module Indis
     
     attr_reader :vmmap  # @return [Indis::VMMap] virtual memory map
 
-    attr_accessor :segments # @return [Array] list of all processed {Indis::Segment segments}
+    attr_accessor :segments # @return [Array<Indis::Segment>] list of all processed {Indis::Segment segments}
     
-    attr_accessor :symbols  # @return [Array] list of all processed {Indis::Symbol symbols}
+    attr_accessor :symbols  # @return [Array<Indis::Symbol>] list of all processed {Indis::Symbol symbols}
     
     # @param [String] filename target binary file name
     # @raise [AttributeError] if the file does not exist
