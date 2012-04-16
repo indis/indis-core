@@ -45,7 +45,7 @@ module Indis
     # @param [Indus::VMMap] vmmap map of the target to load value from
     # @raise [AttributeError] if the size is not one of the known values
     def initialize(ofs, size, vmmap)
-      raise AttributeError, "Unaligned size" unless KIND[size]
+      raise ArgumentError, "Unaligned size" unless KIND[size]
       super ofs
       @size = size
       @value = vmmap.bytes_at(ofs, size).reverse_each.reduce(0) { |v, i| (v << 8) + i }
