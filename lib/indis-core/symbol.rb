@@ -28,6 +28,10 @@ module Indis
       @format_sym = format_sym
       @vmaddr = vmaddr
     end
+    
+    def to_s
+      "#<Indis::Symbol #{@name} at #{@vmaddr.to_s 16}>"
+    end
   end
   
 end
