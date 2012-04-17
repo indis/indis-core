@@ -81,7 +81,7 @@ module Indis
     # Maps an {Indis::Entity entity} (based on its offset).
     # @raise [ArgumentError] if the range is occupied by another entity
     def map(e)
-      raise ArgumentError unless has_unmapped(e.vmaddr, e.size)
+      raise ArgumentError, "Tried to map #{e} at #{e.vmaddr}+#{e.size} on top of #{self[e.vmaddr...(e.vmaddr+e.size)]}" unless has_unmapped(e.vmaddr, e.size)
       @blocks[e.vmaddr] = e
     end
     
