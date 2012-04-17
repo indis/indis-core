@@ -95,6 +95,18 @@ module Indis
       end
     end
     
+    # Resolves a symbol at given virtual address. Targe does so by first checking
+    # the locally available symbols, and falls back to format specific resolver
+    # if nothing found
+    #
+    # @param [Fixnum] vmaddr virtual address
+    # @return [Indis::Symbol, nil] resolved symbol or nil if none found
+    def resolve_symbol_at_address(vmaddr)
+      s = @symbols.find { |sym| sym.vmaddr == vmaddr }
+      return s if s
+      return @format.resolve_symbol_at_address(vmaddr) if @format.respond_to?(:resolve_symbol_at_address)
+    end
+    
     private
     def enqueue_event(event, args)
       @event_queue ||= []
