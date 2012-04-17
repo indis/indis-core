@@ -50,9 +50,21 @@ module Indis
       raise RuntimeError, "Unknown format for magic #{magic.to_s(16)}" if fmts.length == 0
       raise RuntimeError, "Several possible formats: #{fmts}" if fmts.length > 1
       
-      @format = fmts.first.new(self, @io)
+      @format_class = fmts.first
+      @format_load_complete = false
+    end
+    
+    # Perform format load and set up a vm map
+    def load
+      raise RuntimeError, "Already loaded" unless @format_class
+      @format = @format_class.new(self, @io)
+      @format_class = nil
       
       @vmmap = VMMap.new(self)
+
+      @format_load_complete = true
+      replay_queue
+      publish_event :target_load_complete
     end
     
     # A target can consist of several other targets (e.g. fat mach-o). In such
@@ -62,6 +74,48 @@ module Indis
     # @return True if the target is a meta target
     def meta?
       @subtargets && @subtargets.length > 0
+    end
+    
+    # External class can subscribe for events happening with target
+    #
+    # @param [Symbol] event event name
+    # @param listener event listener
+    def subscribe_for_event(event, listener)
+      subscriptions_array(event) << listener
+    end
+    
+    # Post an event with optional payload. All events queue up until #load ends
+    #
+    # @param [Symbol] event event name
+    def publish_event(event, *args)
+      if @format_load_complete == true
+        subscriptions_array(event).each { |s| s.send(event, *args) }
+      else
+        enqueue_event(event, args)
+      end
+    end
+    
+    private
+    def enqueue_event(event, args)
+      @event_queue ||= []
+      @event_queue << [event, args]
+    end
+    
+    def replay_queue
+      return unless @event_queue
+      @event_queue.each { |(e, args)| publish_event(e, *args) }
+      @event_queue = nil
+    end
+    
+    def subscriptions_array(event)
+      @subscriptions ||= {}
+      
+      a = @subscriptions[event]
+      unless a
+        a = []
+        @subscriptions[event] = a
+      end
+      a
     end
   end
   
