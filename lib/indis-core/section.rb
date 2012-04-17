@@ -21,13 +21,16 @@ module Indis
   class Section
     attr_reader :name, :segment
     attr_reader :vmaddr, :vmsize, :bytes
+    attr_reader :type, :attributes
     
-    def initialize(seg, name, vmaddr, vmsize, iooff)
+    def initialize(seg, name, vmaddr, vmsize, iooff, type, attrs)
       @segment = seg
       @name = name
       @vmaddr = vmaddr
       @vmsize = vmsize
       @iooff = iooff
+      @type = type
+      @attributes = attrs
     end
     
     def to_vmrange
