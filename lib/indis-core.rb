@@ -17,6 +17,7 @@
 ##############################################################################
 
 require 'indis-core/version'
+require 'indis-core/target'
 
 module Indis
 end
