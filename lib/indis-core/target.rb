@@ -38,7 +38,7 @@ module Indis
     # @raise [AttributeError] if the file does not exist
     # @raise [RuntimeError] if there is no known format for magic or there are several matching formats
     def initialize(filename)
-      raise AttributeError, "File does not exist" unless FileTest.file?(filename)
+      raise ArgumentError, "File does not exist" unless FileTest.file?(filename)
       @filename = filename
       @io = StringIO.new(File.open(filename).read().force_encoding('BINARY'))
       
