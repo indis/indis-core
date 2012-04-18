@@ -65,6 +65,8 @@ module Indis
       @format_load_complete = true
       replay_queue
       publish_event :target_load_complete
+      
+      self
     end
     
     # A target can consist of several other targets (e.g. fat mach-o). In such
