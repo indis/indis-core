@@ -18,6 +18,7 @@
 
 require 'stringio'
 require 'indis-core/binary_format'
+require 'indis-core/binary_architecture'
 require 'indis-core/vmmap'
 
 module Indis
