@@ -63,7 +63,7 @@ module Indis
       @format = @format_class.new(self, @io)
       @format_class = nil
       
-      @architecture = @format.architecture.new(self)
+      @architecture = BinaryArchitecture.known_archs[@format.architecture].new(self)
       @vmmap = VMMap.new(self)
 
       @format_load_complete = true
