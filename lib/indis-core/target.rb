@@ -64,7 +64,10 @@ module Indis
       @format = @format_class.new(self, @io)
       @format_class = nil
       
-      @architecture = BinaryArchitecture.known_archs[@format.architecture].new(self)
+      archClass = BinaryArchitecture.known_archs[@format.architecture]
+      raise RuntimeError, "Architecture not defined" unless archClass
+      @architecture = archClass.new(self)
+      
       @vmmap = VMMap.new(self)
 
       @format_load_complete = true

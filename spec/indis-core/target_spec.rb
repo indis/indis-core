@@ -2,13 +2,15 @@ require 'indis-core/target'
 
 def macho_format_cls_double
   double('MachO Class', magic: 0xfeedface, name: 'Mach-O',
-    new: double('MachO',
-      architecture: double('Architecture Class',
-        new:double('Architecture')
-      )
-    )
+    new: double('MachO', architecture: :test)
   )
 end
+
+module Indis; module BinaryArchitecture;
+  class TestArch < Architecture
+    def self.name; :test; end
+  end
+end; end
 
 describe Indis::Target do
   it "should require an existing file to operate" do
