@@ -115,10 +115,10 @@ module Indis
     def [](range)
       return entity_at(range) if range.is_a?(Fixnum)
       
-      raise ArgumentError unless range.is_a?(Range)
+      raise ArgumentError, "Unknown argument type #{range.class}" unless range.is_a?(Range)
       seg = segment_at(range.begin)
-      raise ArgumentError unless seg
-      raise ArgumentError unless seg == segment_at(range.max)
+      raise ArgumentError, "No segment mapped at #{range.begin}" unless seg
+      raise ArgumentError, "Segment #{seg} at #{range.begin}, but segment #{segment_at(range.max)} at #{range.end}" unless seg == segment_at(range.max)
       
       a = []
       ofs = range.begin
