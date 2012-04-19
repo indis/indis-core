@@ -19,18 +19,17 @@
 module Indis
   
   class Symbol
-    attr_reader :name, :section, :format_sym, :image, :vmaddr
+    attr_reader :name, :section, :image, :vmaddr, :type
     
-    def initialize(name, section, image, vmaddr, format_sym)
+    def initialize(name, section, image, vmaddr)
       @name = name
       @section = section
       @image = image
-      @format_sym = format_sym
       @vmaddr = vmaddr
     end
     
     def to_s
-      "#<Indis::Symbol #{@name} at #{@vmaddr.to_s 16}>"
+      "#<#{self.class} #{@name} at #{@vmaddr.to_s 16}>"
     end
   end
   
