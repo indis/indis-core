@@ -29,6 +29,8 @@ module Indis
     
     attr_reader :format # @return [Indis::BinaryFormat::Format] binary format of the target
     
+    attr_reader :architecture # @return [Indis::BinaryArchitecture::Arcitecture] binary architecture of the target
+    
     attr_reader :vmmap  # @return [Indis::VMMap] virtual memory map
 
     attr_accessor :segments # @return [Array<Indis::Segment>] list of all processed {Indis::Segment segments}
@@ -61,6 +63,7 @@ module Indis
       @format = @format_class.new(self, @io)
       @format_class = nil
       
+      @architecture = @format.architecture.new(self)
       @vmmap = VMMap.new(self)
 
       @format_load_complete = true

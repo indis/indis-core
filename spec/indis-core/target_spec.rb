@@ -1,12 +1,22 @@
 require 'indis-core/target'
 
+def macho_format_cls_double
+  double('MachO Class', magic: 0xfeedface, name: 'Mach-O',
+    new: double('MachO',
+      architecture: double('Architecture Class',
+        new:double('Architecture')
+      )
+    )
+  )
+end
+
 describe Indis::Target do
   it "should require an existing file to operate" do
     expect { Indis::Target.new("qwerty") }.to raise_error
   end
   
   it "should load file for known format" do
-    fmt = double('MachO Class', magic: 0xfeedface, name: 'Mach-O', new: double('MachO'))
+    fmt = macho_format_cls_double
     Indis::BinaryFormat.stub(:known_formats).and_return([fmt])
     t = Indis::Target.new("spec/fixtures/single-object.o")
     t.load
@@ -14,12 +24,21 @@ describe Indis::Target do
     t.format.should_not be_nil
   end
   
+  it "should have an architecture set up after loading" do
+    fmt = macho_format_cls_double
+    Indis::BinaryFormat.stub(:known_formats).and_return([fmt])
+    t = Indis::Target.new("spec/fixtures/single-object.o")
+    t.architecture.should be_nil
+    t.load
+    t.architecture.should_not be_nil
+  end
+  
   it "should raise if there is no known format to process binary" do
     expect { Indis::Target.new("spec/fixtures/single-object.o") }.to raise_error(RuntimeError)
   end
   
   it "should trigger load event" do
-    fmt = double('MachO Class', magic: 0xfeedface, name: 'Mach-O', new: double('MachO'))
+    fmt = macho_format_cls_double
     Indis::BinaryFormat.stub(:known_formats).and_return([fmt])
     t = Indis::Target.new("spec/fixtures/single-object.o")
     
@@ -32,7 +51,7 @@ describe Indis::Target do
   end
   
   it "should queue up events that happen before load" do
-    fmt = double('MachO Class', magic: 0xfeedface, name: 'Mach-O', new: double('MachO'))
+    fmt = macho_format_cls_double
     Indis::BinaryFormat.stub(:known_formats).and_return([fmt])
     t = Indis::Target.new("spec/fixtures/single-object.o")
     
@@ -48,7 +67,7 @@ describe Indis::Target do
   end
   
   it "should pass arguments to event subscriptions" do
-    fmt = double('MachO Class', magic: 0xfeedface, name: 'Mach-O', new: double('MachO'))
+    fmt = macho_format_cls_double
     Indis::BinaryFormat.stub(:known_formats).and_return([fmt])
     t = Indis::Target.new("spec/fixtures/single-object.o")
     t.load
