@@ -120,20 +120,22 @@ module Indis
       raise ArgumentError, "No segment mapped at #{range.begin}" unless seg
       raise ArgumentError, "Segment #{seg} at #{range.begin}, but segment #{segment_at(range.max)} at #{range.end}" unless seg == segment_at(range.max)
       
-      a = []
+      a = Array.new(range.max - range.begin + 1)
       ofs = range.begin
+      range_begin = range.begin
+      range_max = range.max
+      seg_vmaddr = seg.vmaddr
       
       begin
         b = @blocks[ofs]
         if b
-          a << b
-          (b.size-1).times { a << nil }
+          a[ofs-range_begin] = b
           ofs += b.size
         else
-          a << seg.bytes[ofs-seg.vmaddr].ord
+          a[ofs-range_begin] = seg.bytes[ofs-seg_vmaddr].ord
           ofs += 1
         end
-      end while ofs <= range.max
+      end while ofs <= range_max
       a
     end
   end
