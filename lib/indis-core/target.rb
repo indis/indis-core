@@ -114,7 +114,9 @@ module Indis
     def resolve_symbol_at_address(vmaddr)
       s = @symbols.find { |sym| sym.vmaddr == vmaddr }
       return s if s
-      return @format.resolve_symbol_at_address(vmaddr) if @format.respond_to?(:resolve_symbol_at_address)
+      s = @format.resolve_symbol_at_address(vmaddr) if @format.respond_to?(:resolve_symbol_at_address)
+      @symbols << s if s
+      s
     end
     
     private
