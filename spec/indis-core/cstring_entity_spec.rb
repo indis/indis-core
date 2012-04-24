@@ -6,7 +6,7 @@ describe Indis::CStringEntity do
     map = double('VMMap')
     map.should_receive(:byte_at) { |i| str[i] }.exactly(6).times
     e = Indis::CStringEntity.new(0, map)
-    e.to_s.should == "BYTES\thello"
+    e.to_s.should == "DCB\t\"hello\",0"
     e.value.should == "hello\x0"
   end
 end

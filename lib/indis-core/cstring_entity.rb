@@ -40,7 +40,7 @@ module Indis
     end
     
     def to_s
-      "BYTES\t#{@value[0...-1]}"
+      "DCB\t\"#{@value[0...-1]}\",0"
     end
   end
   
