@@ -118,12 +118,12 @@ module Indis
       raise ArgumentError, "Unknown argument type #{range.class}" unless range.is_a?(Range)
       seg = segment_at(range.begin)
       raise ArgumentError, "No segment mapped at #{range.begin}" unless seg
-      raise ArgumentError, "Segment #{seg} at #{range.begin}, but segment #{segment_at(range.max)} at #{range.end}" unless seg == segment_at(range.max)
+      range_max = range.exclude_end? ? range.last-1 : range.last
+      raise ArgumentError, "Segment #{seg} at #{range.begin}, but segment #{segment_at(range_max)} at #{range.end}" unless seg == segment_at(range_max)
       
-      a = Array.new(range.max - range.begin + 1)
+      a = Array.new(range_max - range.begin + 1)
       ofs = range.begin
       range_begin = range.begin
-      range_max = range.max
       seg_vmaddr = seg.vmaddr
       
       begin
