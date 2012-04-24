@@ -63,7 +63,7 @@ module Indis
     #
     # @return [Range] the range of all addresses
     def to_vmrange
-      @vmaddr..(@vmaddr+@vmsize)
+      @vmaddr...(@vmaddr+@vmsize)
     end
     
     private

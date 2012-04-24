@@ -3,7 +3,7 @@ require 'indis-core/segment'
 describe Indis::Segment do
   it "should provide a correct range for its vm region" do
     seg = Indis::Segment.new(double('Target'), '__TEXT', 0x4096, 120, 0, '')
-    seg.to_vmrange.should == (0x4096..0x410e)
+    seg.to_vmrange.should == (0x4096...0x410e)
   end
   
   it "should provide bytes value based on io offset" do

@@ -34,7 +34,7 @@ module Indis
     end
     
     def to_vmrange
-      @vmaddr..(@vmaddr+@vmsize)
+      @vmaddr...(@vmaddr+@vmsize)
     end
     
     def bytes
