@@ -42,6 +42,11 @@ module Indis
     def to_s
       "DCB\t\"#{@value[0...-1]}\",0"
     end
+    
+    def to_a
+      ['DCB', "\"#{@value[0...-1]}\",0"]
+    end
+    
   end
   
 end

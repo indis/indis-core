@@ -59,6 +59,10 @@ module Indis
     def to_s
       "#{NAMED_TYPE[kind]}\t#{sprintf("%0#{@size*2}X", @value)}"
     end
+    
+    def to_a
+      [NAMED_TYPE[kind], sprintf("%0#{@size*2}X", @value)]
+    end
   end
   
 end
