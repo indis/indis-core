@@ -16,8 +16,6 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.    #
 ##############################################################################
 
-require 'indis-core/binaryops_fixnum'
-
 # BinaryopsString manages bitwise operations on a String. This is useful when
 # you expect bitstrings with meaningful leading zeroes.
 class BinaryopsString < String

@@ -16,6 +16,8 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.    #
 ##############################################################################
 
+# BinaryopsFixnum is a lightweight BinaryopsString, a few methods extending
+# Fixnum with enough operations so that it's usable in bit calculations.
 class Fixnum
   def bitlen=(bitlen)
     @bitlen = bitlen
