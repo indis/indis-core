@@ -41,4 +41,12 @@ class Fixnum
       self
     end
   end
+  
+  alias :old_range :[]
+  
+  def [](range)
+    return old_range(range) unless range.is_a?(Range)
+    raise ArgumentError, "Only inclusive ranges are supported" if range.exclude_end?
+    (self >> range.begin) & ((1 << (range.end-range.begin+1)) - 1)
+  end
 end
